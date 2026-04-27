@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade 7 Math Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e17;
+    --card: #1a1828;
+    --accent1: #ff6b6b;
+    --accent2: #ffd166;
+    --accent3: #06d6a0;
+    --accent4: #118ab2;
+    --accent5: #a855f7;
+    --text: #fffffe;
+    --subtext: #a7a9be;
+    --border: #2d2b45;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    font-family: 'Nunito', sans-serif;
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background stars */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 20%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 80% 50%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 80%, rgba(255,255,255,0.25) 0%, transparent 100%),
+      radial-gradient(2px 2px at 30% 60%, rgba(168,85,247,0.4) 0%, transparent 100%),
+      radial-gradient(2px 2px at 70% 15%, rgba(6,214,160,0.3) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    background: linear-gradient(135deg, var(--accent2), var(--accent1), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 1px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  header p {
+    color: var(--subtext);
+    font-size: 1rem;
+    margin-top: 6px;
+    font-weight: 600;
+  }
+
+  .tabs {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tab-btn {
+    background: var(--card);
+    border: 2px solid var(--border);
+    color: var(--subtext);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tab-btn:hover { transform: translateY(-2px); }
+  .tab-btn.active[data-tab="basic"]     { background: var(--accent4); border-color: var(--accent4); color: #fff; }
+  .tab-btn.active[data-tab="fraction"]  { background: var(--accent1); border-color: var(--accent1); color: #fff; }
+  .tab-btn.active[data-tab="percent"]   { background: var(--accent2); border-color: var(--accent2); color: #111; }
+  .tab-btn.active[data-tab="area"]      { background: var(--accent3); border-color: var(--accent3); color: #111; }
+  .tab-btn.active[data-tab="ratio"]     { background: var(--accent5); border-color: var(--accent5); color: #fff; }
+  .tab-btn.active[data-tab="algebra"]   { background: var(--accent1); border-color: var(--accent1); color: #fff; }
+
+  .panels {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 20px 60px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .panel {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .panel.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 28px;
+    margin-bottom: 20px;
+  }
+
+  .card h2 {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--subtext);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  input, select {
+    width: 100%;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 14px;
+  }
+
+  input:focus, select:focus { border-color: var(--accent5); }
+
+  select option { background: var(--card); }
+
+  .row2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .row3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  .btn:hover { transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+  .btn:active { transform: translateY(0); }
+
+  .btn-blue   { background: var(--accent4); color: #fff; }
+  .btn-red    { background: var(--accent1); color: #fff; }
+  .btn-yellow { background: var(--accent2); color: #111; }
+  .btn-green  { background: var(--accent3); color: #111; }
+  .btn-purple { background: var(--accent5); color: #fff; }
+
+  .result-box {
+    background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(6,214,160,0.1));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-top: 16px;
+    min-height: 60px;
+    display: none;
+  }
+
+  .result-box.show { display: block; animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+
+  @keyframes popIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+
+  .result-box .label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--subtext);
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .result-box .value {
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.8rem;
+    color: var(--accent2);
+  }
+
+  .result-box .steps {
+    margin-top: 12px;
+    font-size: 0.88rem;
+    color: var(--subtext);
+    line-height: 1.7;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+
+  .result-box .steps strong { color: var(--text); }
+
+  /* Basic calculator display */
+  .calc-display {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: right;
+    margin-bottom: 16px;
+    min-height: 80px;
+  }
+
+  .calc-display .expr {
+    font-size: 0.9rem;
+    color: var(--subtext);
+    min-height: 20px;
+    word-break: break-all;
+  }
+
+  .calc-display .num {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.4rem;
+    color: var(--text);
+    word-break: break-all;
+  }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .calc-btn {
+    padding: 18px 8px;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+  }
+
+  .calc-btn:hover { transform: scale(1.05); }
+  .calc-btn:active { transform: scale(0.95); }
+
+  .calc-btn.op     { color: var(--accent2); font-size: 1.3rem; }
+  .calc-btn.action { background: var(--accent5); color: #fff; border-color: var(--accent5); }
+  .calc-btn.equals { background: var(--accent3); color: #111; border-color: var(--accent3); grid-column: span 2; }
+  .calc-btn.clear  { background: var(--accent1); color: #fff; border-color: var(--accent1); }
+
+  .error { color: var(--accent1) !important; font-size: 1rem !important; }
+
+  /* Shape buttons */
+  .shape-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .shape-btn {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    color: var(--subtext);
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 12px 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+  }
+
+  .shape-btn .icon { font-size: 1.5rem; display: block; margin-bottom: 4px; }
+  .shape-btn:hover, .shape-btn.active { border-color: var(--accent3); color: var(--accent3); background: rgba(6,214,160,0.08); }
+
+  .fields { display: none; }
+  .fields.show { display: block; animation: fadeIn 0.2s ease; }
+
+  footer {
+    text-align: center;
+    color: var(--subtext);
+    font-size: 0.8rem;
+    padding: 20px;
+    position: relative;
+    z-index: 1;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧮 Grade 7 Math</h1>
+  <p>Your smart math helper for class!</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="basic">🔢 Calculator</button>
+  <button class="tab-btn" data-tab="fraction">🍕 Fractions</button>
+  <button class="tab-btn" data-tab="percent">📊 Percent</button>
+  <button class="tab-btn" data-tab="area">📐 Area</button>
+  <button class="tab-btn" data-tab="ratio">⚖️ Ratio</button>
+  <button class="tab-btn" data-tab="algebra">🔍 Algebra</button>
+</div>
+
+<div class="panels">
+
+  <!-- BASIC CALCULATOR -->
+  <div class="panel active" id="panel-basic">
+    <div class="card">
+      <h2 style="color:var(--accent4)">🔢 Basic Calculator</h2>
+      <div class="calc-display">
+        <div class="expr" id="expr"></div>
+        <div class="num" id="display">0</div>
+      </div>
+      <div class="calc-grid">
+        <button class="calc-btn clear" onclick="clearCalc()">AC</button>
+        <button class="calc-btn action" onclick="toggleSign()">+/−</button>
+        <button class="calc-btn action" onclick="percent()">%</button>
+        <button class="calc-btn op" onclick="op('÷')">÷</button>
+
+        <button class="calc-btn" onclick="num('7')">7</button>
+        <button class="calc-btn" onclick="num('8')">8</button>
+        <button class="calc-btn" onclick="num('9')">9</button>
+        <button class="calc-btn op" onclick="op('×')">×</button>
+
+        <button class="calc-btn" onclick="num('4')">4</button>
+        <button class="calc-btn" onclick="num('5')">5</button>
+        <button class="calc-btn" onclick="num('6')">6</button>
+        <button class="calc-btn op" onclick="op('−')">−</button>
+
+        <button class="calc-btn" onclick="num('1')">1</button>
+        <button class="calc-btn" onclick="num('2')">2</button>
+        <button class="calc-btn" onclick="num('3')">3</button>
+        <button class="calc-btn op" onclick="op('+')">+</button>
+
+        <button class="calc-btn" onclick="num('0')" style="grid-column:span 2">0</button>
+        <button class="calc-btn" onclick="dot()">.</button>
+        <button class="calc-btn equals" onclick="equals()" style="grid-column:span 1; background:var(--accent3); color:#111; border-color:var(--accent3)">=</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRACTIONS -->
+  <div class="panel" id="panel-fraction">
+    <div class="card">
+      <h2 style="color:var(--accent1)">🍕 Fraction Calculator</h2>
+      <label>Operation</label>
+      <select id="frac-op">
+        <option value="add">Add (+)</option>
+        <option value="sub">Subtract (−)</option>
+        <option value="mul">Multiply (×)</option>
+        <option value="div">Divide (÷)</option>
+        <option value="sim">Simplify</option>
+      </select>
+      <div class="row2">
+        <div>
+          <label>Numerator 1</label>
+          <input type="number" id="f-n1" placeholder="e.g. 3">
+        </div>
+        <div>
+          <label>Denominator 1</label>
+          <input type="number" id="f-d1" placeholder="e.g. 4">
+        </div>
+      </div>
+      <div class="row2" id="frac-second">
+        <div>
+          <label>Numerator 2</label>
+          <input type="number" id="f-n2" placeholder="e.g. 1">
+        </div>
+        <div>
+          <label>Denominator 2</label>
+          <input type="number" id="f-d2" placeholder="e.g. 2">
+        </div>
+      </div>
+      <button class="btn btn-red" onclick="calcFraction()">Calculate</button>
+      <div class="result-box" id="res-fraction"></div>
+    </div>
+  </div>
+
+  <!-- PERCENT -->
+  <div class="panel" id="panel-percent">
+    <div class="card">
+      <h2 style="color:var(--accent2)">📊 Percentage Calculator</h2>
+      <label>What do you need?</label>
+      <select id="pct-type" onchange="updatePctFields()">
+        <option value="of">What is X% of Y?</option>
+        <option value="what">X is what % of Y?</option>
+        <option value="change">Percentage change</option>
+      </select>
+
+      <div id="pct-of">
+        <label>Percentage (%)</label>
+        <input type="number" id="pct-p" placeholder="e.g. 25">
+        <label>Of number</label>
+        <input type="number" id="pct-n" placeholder="e.g. 200">
+      </div>
+
+      <div id="pct-what" style="display:none">
+        <label>Number (X)</label>
+        <input type="number" id="pct-x" placeholder="e.g. 30">
+        <label>Of total (Y)</label>
+        <input type="number" id="pct-y" placeholder="e.g. 120">
+      </div>
+
+      <div id="pct-change-fields" style="display:none">
+        <label>Original value</label>
+        <input type="number" id="pct-orig" placeholder="e.g. 80">
+        <label>New value</label>
+        <input type="number" id="pct-new" placeholder="e.g. 100">
+      </div>
+
+      <button class="btn btn-yellow" onclick="calcPercent()">Calculate</button>
+      <div class="result-box" id="res-percent"></div>
+    </div>
+  </div>
+
+  <!-- AREA & PERIMETER -->
+  <div class="panel" id="panel-area">
+    <div class="card">
+      <h2 style="color:var(--accent3)">📐 Area & Perimeter</h2>
+      <label>Choose shape</label>
+      <div class="shape-grid">
+        <button class="shape-btn active" onclick="selectShape('square',this)"><span class="icon">⬛</span>Square</button>
+        <button class="shape-btn" onclick="selectShape('rect',this)"><span class="icon">▬</span>Rectangle</button>
+        <button class="shape-btn" onclick="selectShape('triangle',this)"><span class="icon">🔺</span>Triangle</button>
+        <button class="shape-btn" onclick="selectShape('circle',this)"><span class="icon">⭕</span>Circle</button>
+        <button class="shape-btn" onclick="selectShape('trapezoid',this)"><span class="icon">🔷</span>Trapezoid</button>
+        <button class="shape-btn" onclick="selectShape('parallelogram',this)"><span class="icon">◆</span>Parallelogram</button>
+      </div>
+
+      <div class="fields show" id="shape-square">
+        <label>Side length</label>
+        <input type="number" id="sq-s" placeholder="e.g. 5">
+      </div>
+      <div class="fields" id="shape-rect">
+        <div class="row2">
+          <div><label>Length</label><input type="number" id="r-l" placeholder="e.g. 8"></div>
+          <div><label>Width</label><input type="number" id="r-w" placeholder="e.g. 5"></div>
+        </div>
+      </div>
+      <div class="fields" id="shape-triangle">
+        <label>Base</label><input type="number" id="t-b" placeholder="e.g. 6">
+        <label>Height</label><input type="number" id="t-h" placeholder="e.g. 4">
+        <label>Side 1</label><input type="number" id="t-s1" placeholder="for perimeter">
+        <label>Side 2</label><input type="number" id="t-s2" placeholder="for perimeter">
+      </div>
+      <div class="fields" id="shape-circle">
+        <label>Radius</label><input type="number" id="c-r" placeholder="e.g. 7">
+      </div>
+      <div class="fields" id="shape-trapezoid">
+        <label>Base 1 (a)</label><input type="number" id="tr-a" placeholder="e.g. 10">
+        <label>Base 2 (b)</label><input type="number" id="tr-b" placeholder="e.g. 6">
+        <label>Height</label><input type="number" id="tr-h" placeholder="e.g. 4">
+        <label>Leg 1</label><input type="number" id="tr-l1" placeholder="for perimeter">
+        <label>Leg 2</label><input type="number" id="tr-l2" placeholder="for perimeter">
+      </div>
+      <div class="fields" id="shape-parallelogram">
+        <label>Base</label><input type="number" id="p-b" placeholder="e.g. 9">
+        <label>Height</label><input type="number" id="p-h" placeholder="e.g. 5">
+        <label>Side</label><input type="number" id="p-s" placeholder="for perimeter">
+      </div>
+
+      <button class="btn btn-green" onclick="calcArea()">Calculate</button>
+      <div class="result-box" id="res-area"></div>
+    </div>
+  </div>
+
+  <!-- RATIO -->
+  <div class="panel" id="panel-ratio">
+    <div class="card">
+      <h2 style="color:var(--accent5)">⚖️ Ratio & Proportion</h2>
+      <label>Type</label>
+      <select id="ratio-type">
+        <option value="simplify">Simplify ratio A : B</option>
+        <option value="missing">Find missing value (A/B = C/?)</option>
+        <option value="divide">Divide a number in ratio A : B</option>
+      </select>
+      <div class="row2">
+        <div><label>A</label><input type="number" id="ra-a" placeholder="e.g. 4"></div>
+        <div><label>B</label><input type="number" id="ra-b" placeholder="e.g. 6"></div>
+      </div>
+      <div id="ratio-extra">
+        <label id="ratio-extra-label">C (known value)</label>
+        <input type="number" id="ra-c" placeholder="e.g. 8">
+      </div>
+      <button class="btn btn-purple" onclick="calcRatio()">Calculate</button>
+      <div class="result-box" id="res-ratio"></div>
+    </div>
+  </div>
+
+  <!-- ALGEBRA -->
+  <div class="panel" id="panel-algebra">
+    <div class="card">
+      <h2 style="color:var(--accent1)">🔍 Simple Algebra Solver</h2>
+      <label>Equation type</label>
+      <select id="alg-type" onchange="updateAlgFields()">
+        <option value="linear">Linear: ax + b = c</option>
+        <option value="linear2">Linear: ax = b</option>
+        <option value="power">Power: x² = a</option>
+      </select>
+
+      <div id="alg-linear">
+        <div class="row3">
+          <div><label>a (coeff)</label><input type="number" id="al-a" placeholder="e.g. 2"></div>
+          <div><label>b (add)</label><input type="number" id="al-b" placeholder="e.g. 3"></div>
+          <div><label>c (result)</label><input type="number" id="al-c" placeholder="e.g. 11"></div>
+        </div>
+      </div>
+      <div id="alg-linear2" style="display:none">
+        <div class="row2">
+          <div><label>a (coeff)</label><input type="number" id="al2-a" placeholder="e.g. 5"></div>
+          <div><label>b (result)</label><input type="number" id="al2-b" placeholder="e.g. 25"></div>
+        </div>
+      </div>
+      <div id="alg-power" style="display:none">
+        <label>a (x² = a)</label>
+        <input type="number" id="alp-a" placeholder="e.g. 49">
+      </div>
+
+      <button class="btn btn-red" onclick="calcAlgebra()">Solve</button>
+      <div class="result-box" id="res-algebra"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>Made with ❤️ for Grade 7 students • Keep learning, keep growing! 🚀</footer>
+
+<script>
+// ─── TAB SWITCHING ───────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ─── BASIC CALCULATOR ────────────────────────────
+let current = '0', expr = '', operator = null, prevNum = null, justEvaled = false;
+
+function updateDisplay(val) {
+  document.getElementById('display').textContent = val;
+  document.getElementById('expr').textContent = expr;
+}
+
+function num(n) {
+  if (justEvaled) { current = n; expr = ''; justEvaled = false; }
+  else current = (current === '0') ? n : current + n;
+  updateDisplay(current);
+}
+
+function dot() {
+  if (!current.includes('.')) current += '.';
+  updateDisplay(current);
+}
+
+function op(o) {
+  justEvaled = false;
+  if (prevNum !== null && operator) {
+    equals(true);
+  }
+  prevNum = parseFloat(current);
+  operator = o;
+  expr = current + ' ' + o;
+  current = '0';
+  updateDisplay('0');
+}
+
+function equals(chain = false) {
+  if (prevNum === null || !operator) return;
+  const a = prevNum, b = parseFloat(current);
+  let res;
+  if (operator === '+') res = a + b;
+  else if (operator === '−') res = a - b;
+  else if (operator === '×') res = a * b;
+  else if (operator === '÷') { res = b === 0 ? 'Error' : a / b; }
+  if (!chain) {
+    expr = a + ' ' + operator + ' ' + b + ' =';
+    justEvaled = true;
+    operator = null; prevNum = null;
+  }
+  current = res === 'Error' ? 'Error' : ('' + parseFloat(res.toFixed(10)));
+  updateDisplay(current);
+}
+
+function clearCalc() { current = '0'; expr = ''; operator = null; prevNum = null; justEvaled = false; updateDisplay('0'); }
+function toggleSign() { current = ('' + -parseFloat(current)); updateDisplay(current); }
+function percent() { current = '' + parseFloat(current) / 100; updateDisplay(current); }
+
+// ─── FRACTION CALCULATOR ─────────────────────────
+function gcd(a, b) { a = Math.abs(a); b = Math.abs(b); while(b) { [a,b]=[b,a%b]; } return a; }
+function lcm(a, b) { return Math.abs(a*b)/gcd(a,b); }
+
+function simplify(n, d) {
+  if (d === 0) return null;
+  const g = gcd(Math.abs(n), Math.abs(d));
+  if (d < 0) { n = -n; d = -d; }
+  return [n/g, d/g];
+}
+
+function fracStr(n, d) {
+  if (d === 1) return n + '';
+  const whole = Math.trunc(n/d);
+  const rem = Math.abs(n % d);
+  if (rem === 0) return whole + '';
+  if (whole !== 0) return whole + ' ' + Math.abs(n%d) + '/' + d;
+  return n + '/' + d;
+}
+
+document.getElementById('frac-op').addEventListener('change', function() {
+  document.getElementById('frac-second').style.display = this.value === 'sim' ? 'none' : '';
+});
+
+function calcFraction() {
+  const op = document.getElementById('frac-op').value;
+  const n1 = parseInt(document.getElementById('f-n1').value);
+  const d1 = parseInt(document.getElementById('f-d1').value);
+  let steps = '', result = '';
+
+  if (op === 'sim') {
+    if (isNaN(n1)||isNaN(d1)||d1===0) return showResult('res-fraction','❌ Check inputs','','');
+    const [sn,sd] = simplify(n1,d1);
+    result = fracStr(sn,sd);
+    steps = `GCD of ${n1} and ${d1} = ${gcd(Math.abs(n1),Math.abs(d1))}<br>`;
+    steps += `${n1}/${d1} ÷ ${gcd(Math.abs(n1),Math.abs(d1))} = <strong>${sn}/${sd}</strong>`;
+  } else {
+    const n2 = parseInt(document.getElementById('f-n2').value);
+    const d2 = parseInt(document.getElementById('f-d2').value);
+    if (isNaN(n1)||isNaN(d1)||isNaN(n2)||isNaN(d2)||d1===0||d2===0) return showResult('res-fraction','❌ Check inputs','','');
+    let rn, rd;
+    if (op==='add') {
+      const l = lcm(d1,d2);
+      rn = n1*(l/d1) + n2*(l/d2); rd = l;
+      steps = `LCD = ${l}<br>${n1}/${d1} + ${n2}/${d2} = ${n1*(l/d1)}/${l} + ${n2*(l/d2)}/${l} = ${rn}/${rd}`;
+    } else if (op==='sub') {
+      const l = lcm(d1,d2);
+      rn = n1*(l/d1) - n2*(l/d2); rd = l;
+      steps = `LCD = ${l}<br>${n1}/${d1} − ${n2}/${d2} = ${n1*(l/d1)}/${l} − ${n2*(l/d2)}/${l} = ${rn}/${rd}`;
+    } else if (op==='mul') {
+      rn = n1*n2; rd = d1*d2;
+      steps = `${n1}/${d1} × ${n2}/${d2} = ${rn}/${rd}`;
+    } else {
+      rn = n1*d2; rd = d1*n2;
+      steps = `${n1}/${d1} ÷ ${n2}/${d2} = ${n1}/${d1} × ${d2}/${n2} = ${rn}/${rd}`;
+      if (rd === 0) return showResult('res-fraction','❌ Cannot divide by zero','','');
+    }
+    const [sn,sd] = simplify(rn,rd);
+    result = fracStr(sn,sd);
+    steps += `<br>Simplified: <strong>${sn}/${sd}</strong>`;
+    if (sd === 1) steps += ` = <strong>${sn}</strong>`;
+    const dec = sn/sd;
+    steps += `<br>Decimal: <strong>${parseFloat(dec.toFixed(6))}</strong>`;
+  }
+  showResult('res-fraction', result, '= ' + result, steps);
+}
+
+// ─── PERCENTAGE ──────────────────────────────────
+function updatePctFields() {
+  const t = document.getElementById('pct-type').value;
+  document.getElementById('pct-of').style.display = t==='of'?'':'none';
+  document.getElementById('pct-what').style.display = t==='what'?'':'none';
+  document.getElementById('pct-change-fields').style.display = t==='change'?'':'none';
+}
+
+function calcPercent() {
+  const t = document.getElementById('pct-type').value;
+  let result, steps;
+  if (t==='of') {
+    const p = parseFloat(document.getElementById('pct-p').value);
+    const n = parseFloat(document.getElementById('pct-n').value);
+    if (isNaN(p)||isNaN(n)) return showResult('res-percent','❌ Check inputs','','');
+    result = (p/100)*n;
+    steps = `${p}% × ${n} = (${p} ÷ 100) × ${n} = <strong>${result}</strong>`;
+  } else if (t==='what') {
+    const x = parseFloat(document.getElementById('pct-x').value);
+    const y = parseFloat(document.getElementById('pct-y').value);
+    if (isNaN(x)||isNaN(y)||y===0) return showResult('res-percent','❌ Check inputs','','');
+    result = (x/y)*100;
+    steps = `(${x} ÷ ${y}) × 100 = <strong>${parseFloat(result.toFixed(2))}%</strong>`;
+    result = parseFloat(result.toFixed(2)) + '%';
+    showResult('res-percent', result, result, steps); return;
+  } else {
+    const orig = parseFloat(document.getElementById('pct-orig').value);
+    const nw = parseFloat(document.getElementById('pct-new').value);
+    if (isNaN(orig)||isNaN(nw)||orig===0) return showResult('res-percent','❌ Check inputs','','');
+    const change = ((nw-orig)/orig)*100;
+    result = parseFloat(change.toFixed(2));
+    steps = `Change = ${nw} − ${orig} = ${nw-orig}<br>% Change = (${nw-orig} ÷ ${orig}) × 100 = <strong>${result}%</strong>`;
+    result = result + '%';
+    showResult('res-percent', result, result, steps); return;
+  }
+  showResult('res-percent', parseFloat(result.toFixed(4)), '= ' + parseFloat(result.toFixed(4)), steps);
+}
+
+// ─── AREA & PERIMETER ────────────────────────────
+let currentShape = 'square';
+
+function selectShape(shape, el) {
+  currentShape = shape;
+  document.querySelectorAll('.shape-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.fields').forEach(f => f.classList.remove('show'));
+  document.getElementById('shape-' + shape).classList.add('show');
+  document.getElementById('res-area').classList.remove('show');
+}
+
+function calcArea() {
+  const pi = Math.PI;
+  let area, perim, steps;
+  if (currentShape === 'square') {
+    const s = parseFloat(document.getElementById('sq-s').value);
+    if (isNaN(s)) return showResult('res-area','❌','','');
+    area = s*s; perim = 4*s;
+    steps = `Area = s² = ${s}² = <strong>${area}</strong><br>Perimeter = 4s = 4×${s} = <strong>${perim}</strong>`;
+  } else if (currentShape === 'rect') {
+    const l = parseFloat(document.getElementById('r-l').value);
+    const w = parseFloat(document.getElementById('r-w').value);
+    if (isNaN(l)||isNaN(w)) return showResult('res-area','❌','','');
+    area = l*w; perim = 2*(l+w);
+    steps = `Area = l×w = ${l}×${w} = <strong>${area}</strong><br>Perimeter = 2(l+w) = 2(${l}+${w}) = <strong>${perim}</strong>`;
+  } else if (currentShape === 'triangle') {
+    const b = parseFloat(document.getElementById('t-b').value);
+    const h = parseFloat(document.getElementById('t-h').value);
+    const s1 = parseFloat(document.getElementById('t-s1').value)||0;
+    const s2 = parseFloat(document.getElementById('t-s2').value)||0;
+    if (isNaN(b)||isNaN(h)) return showResult('res-area','❌','','');
+    area = 0.5*b*h;
+    perim = s1 && s2 ? b+s1+s2 : '—';
+    steps = `Area = ½×b×h = ½×${b}×${h} = <strong>${area}</strong>`;
+    if (s1&&s2) steps += `<br>Perimeter = ${b}+${s1}+${s2} = <strong>${perim}</strong>`;
+  } else if (currentShape === 'circle') {
+    const r = parseFloat(document.getElementById('c-r').value);
+    if (isNaN(r)) return showResult('res-area','❌','','');
+    area = parseFloat((pi*r*r).toFixed(4));
+    perim = parseFloat((2*pi*r).toFixed(4));
+    steps = `Area = πr² = π×${r}² = <strong>${area}</strong><br>Circumference = 2πr = 2×π×${r} = <strong>${perim}</strong>`;
+  } else if (currentShape === 'trapezoid') {
+    const a = parseFloat(document.getElementById('tr-a').value);
+    const b = parseFloat(document.getElementById('tr-b').value);
+    const h = parseFloat(document.getElementById('tr-h').value);
+    const l1 = parseFloat(document.getElementById('tr-l1').value)||0;
+    const l2 = parseFloat(document.getElementById('tr-l2').value)||0;
+    if (isNaN(a)||isNaN(b)||isNaN(h)) return showResult('res-area','❌','','');
+    area = 0.5*(a+b)*h;
+    perim = l1&&l2 ? a+b+l1+l2 : '—';
+    steps = `Area = ½(a+b)h = ½(${a}+${b})×${h} = <strong>${area}</strong>`;
+    if (l1&&l2) steps += `<br>Perimeter = ${a}+${b}+${l1}+${l2} = <strong>${perim}</strong>`;
+  } else if (currentShape === 'parallelogram') {
+    const b = parseFloat(document.getElementById('p-b').value);
+    const h = parseFloat(document.getElementById('p-h').value);
+    const s = parseFloat(document.getElementById('p-s').value)||0;
+    if (isNaN(b)||isNaN(h)) return showResult('res-area','❌','','');
+    area = b*h;
+    perim = s ? 2*(b+s) : '—';
+    steps = `Area = b×h = ${b}×${h} = <strong>${area}</strong>`;
+    if (s) steps += `<br>Perimeter = 2(b+s) = 2(${b}+${s}) = <strong>${perim}</strong>`;
+  }
+  const display = `Area: ${area} | Perimeter: ${perim}`;
+  showResult('res-area', display, '', steps);
+}
+
+// ─── RATIO ───────────────────────────────────────
+document.getElementById('ratio-type').addEventListener('change', function() {
+  const ex = document.getElementById('ratio-extra');
+  const lbl = document.getElementById('ratio-extra-label');
+  if (this.value==='simplify') { ex.style.display='none'; }
+  else if (this.value==='missing') { ex.style.display=''; lbl.textContent='C (known value for A)'; }
+  else { ex.style.display=''; lbl.textContent='Total to divide'; }
+});
+
+function calcRatio() {
+  const type = document.getElementById('ratio-type').value;
+  const a = parseFloat(document.getElementById('ra-a').value);
+  const b = parseFloat(document.getElementById('ra-b').value);
+  let result, steps;
+  if (isNaN(a)||isNaN(b)) return showResult('res-ratio','❌','','');
+
+  if (type==='simplify') {
+    const g = gcd(a,b);
+    result = `${a/g} : ${b/g}`;
+    steps = `GCD(${a},${b}) = ${g}<br>${a}÷${g} : ${b}÷${g} = <strong>${result}</strong>`;
+  } else if (type==='missing') {
+    const c = parseFloat(document.getElementById('ra-c').value);
+    if (isNaN(c)) return showResult('res-ratio','❌','','');
+    const d = (b*c)/a;
+    result = `D = ${parseFloat(d.toFixed(4))}`;
+    steps = `If A/B = C/D, then D = (B×C)/A<br>D = (${b}×${c})/${a} = <strong>${parseFloat(d.toFixed(4))}</strong>`;
+  } else {
+    const total = parseFloat(document.getElementById('ra-c').value);
+    if (isNaN(total)) return showResult('res-ratio','❌','','');
+    const partA = (a/(a+b))*total;
+    const partB = (b/(a+b))*total;
+    result = `A: ${parseFloat(partA.toFixed(4))} | B: ${parseFloat(partB.toFixed(4))}`;
+    steps = `Total parts = ${a}+${b} = ${a+b}<br>A's share = (${a}÷${a+b})×${total} = <strong>${parseFloat(partA.toFixed(4))}</strong><br>B's share = (${b}÷${a+b})×${total} = <strong>${parseFloat(partB.toFixed(4))}</strong>`;
+  }
+  showResult('res-ratio', result, result, steps);
+}
+
+// ─── ALGEBRA ─────────────────────────────────────
+function updateAlgFields() {
+  const t = document.getElementById('alg-type').value;
+  document.getElementById('alg-linear').style.display = t==='linear'?'':'none';
+  document.getElementById('alg-linear2').style.display = t==='linear2'?'':'none';
+  document.getElementById('alg-power').style.display = t==='power'?'':'none';
+}
+
+function calcAlgebra() {
+  const t = document.getElementById('alg-type').value;
+  let result, steps;
+  if (t==='linear') {
+    const a = parseFloat(document.getElementById('al-a').value);
+    const b = parseFloat(document.getElementById('al-b').value);
+    const c = parseFloat(document.getElementById('al-c').value);
+    if (isNaN(a)||isNaN(b)||isNaN(c)) return showResult('res-algebra','❌','','');
+    if (a===0) return showResult('res-algebra','❌ Coefficient a cannot be 0','','');
+    const x = (c-b)/a;
+    result = `x = ${parseFloat(x.toFixed(6))}`;
+    steps = `${a}x + ${b} = ${c}<br>${a}x = ${c} − ${b} = ${c-b}<br>x = ${c-b} ÷ ${a} = <strong>${parseFloat(x.toFixed(6))}</strong>`;
+  } else if (t==='linear2') {
+    const a = parseFloat(document.getElementById('al2-a').value);
+    const b = parseFloat(document.getElementById('al2-b').value);
+    if (isNaN(a)||isNaN(b)||a===0) return showResult('res-algebra','❌','','');
+    const x = b/a;
+    result = `x = ${parseFloat(x.toFixed(6))}`;
+    steps = `${a}x = ${b}<br>x = ${b} ÷ ${a} = <strong>${parseFloat(x.toFixed(6))}</strong>`;
+  } else {
+    const a = parseFloat(document.getElementById('alp-a').value);
+    if (isNaN(a)) return showResult('res-algebra','❌','','');
+    if (a < 0) return showResult('res-algebra','❌ No real solution (negative)','','');
+    const x = Math.sqrt(a);
+    result = `x = ±${parseFloat(x.toFixed(6))}`;
+    steps = `x² = ${a}<br>x = √${a} = <strong>±${parseFloat(x.toFixed(6))}</strong>`;
+  }
+  showResult('res-algebra', result, result, steps);
+}
+
+// ─── SHOW RESULT HELPER ──────────────────────────
+function showResult(id, value, display, steps) {
+  const box = document.getElementById(id);
+  box.innerHTML = `
+    <span class="label">✅ Result</span>
+    <div class="value">${value}</div>
+    ${steps ? `<div class="steps">${steps}</div>` : ''}
+  `;
+  box.classList.remove('show');
+  void box.offsetWidth;
+  box.classList.add('show');
+}
+</script>
+</body>
+</html>
