@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grade 7 Math Calculator</title>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<title>Al Rushed American Private School - Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&family=Cairo:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
   :root {
     --bg: #0f0e17;
@@ -29,7 +29,6 @@
     overflow-x: hidden;
   }
 
-  /* Animated background stars */
   body::before {
     content: '';
     position: fixed;
@@ -44,36 +43,190 @@
     z-index: 0;
   }
 
+  /* ═══════════════════════════════════════════════════
+     HEADER — 3-COLUMN LAYOUT
+     ═══════════════════════════════════════════════════ */
   header {
-    text-align: center;
-    padding: 40px 20px 20px;
     position: relative;
     z-index: 1;
+    padding: 24px 16px 8px;
   }
 
-  header h1 {
+  .header-main-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 12px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* ─── LEFT COLUMN: Flag + English ─────────────── */
+  .header-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    justify-self: start;
+  }
+
+  .uae-flag {
+    height: 56px;
+    width: auto;
+    border-radius: 6px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+  }
+  .uae-flag:hover { transform: scale(1.08); }
+
+  .official-en {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+  }
+
+  .official-en span {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--subtext);
+    letter-spacing: 0.3px;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  /* ─── CENTER COLUMN: Title ────────────────────── */
+  .header-center {
+    text-align: center;
+    justify-self: center;
+    padding: 0 8px;
+  }
+
+  .main-title {
     font-family: 'Fredoka One', cursive;
-    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-size: clamp(1.1rem, 3.2vw, 2.2rem);
     background: linear-gradient(135deg, var(--accent2), var(--accent1), var(--accent5));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     animation: float 3s ease-in-out infinite;
+    line-height: 1.25;
+  }
+
+  .sub-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(0.7rem, 2vw, 1rem);
+    font-weight: 800;
+    color: var(--accent3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ─── RIGHT COLUMN: Arabic + Logo ─────────────── */
+  .header-right {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    justify-self: end;
+  }
+
+  .official-ar {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    text-align: right;
+    direction: rtl;
+  }
+
+  .official-ar span {
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: rgba(255,255,255,0.42);
+    line-height: 1.6;
+    white-space: nowrap;
+  }
+
+  .school-logo {
+    height: 58px;
+    width: 58px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    box-shadow: 0 2px 12px rgba(168,85,247,0.3);
+    transition: transform 0.3s ease;
+  }
+  .school-logo:hover { transform: scale(1.08); }
+
+  .header-divider {
+    width: 80px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent5), transparent);
+    margin: 18px auto 0;
+    border: none;
   }
 
   @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-6px); }
+    50% { transform: translateY(-5px); }
   }
 
-  header p {
-    color: var(--subtext);
-    font-size: 1rem;
-    margin-top: 6px;
-    font-weight: 600;
+  /* ─── RESPONSIVE: TABLET (768px) ─────────────── */
+  @media (max-width: 768px) {
+    .header-main-row { gap: 8px; }
+    .uae-flag { height: 44px; }
+    .school-logo { height: 48px; width: 48px; }
+    .official-en span { font-size: 0.65rem; }
+    .official-ar span { font-size: 0.65rem; }
   }
 
+  /* ─── RESPONSIVE: LARGE PHONES (580px) ───────── */
+  @media (max-width: 580px) {
+    header { padding: 16px 10px 6px; }
+    .header-main-row {
+      grid-template-columns: auto 1fr auto;
+      gap: 6px;
+    }
+    .uae-flag { height: 36px; }
+    .school-logo { height: 40px; width: 40px; }
+    .official-en span { font-size: 0.58rem; line-height: 1.4; }
+    .official-ar span { font-size: 0.58rem; line-height: 1.5; }
+    .header-left { gap: 6px; }
+    .header-right { gap: 6px; }
+  }
+
+  /* ─── RESPONSIVE: SMALL PHONES (400px) ───────── */
+  @media (max-width: 400px) {
+    header { padding: 12px 6px 4px; }
+    .header-main-row {
+      grid-template-columns: auto 1fr auto;
+      gap: 4px;
+    }
+    .uae-flag { height: 30px; }
+    .school-logo { height: 34px; width: 34px; }
+    .official-en span { font-size: 0.5rem; line-height: 1.35; }
+    .official-ar span { font-size: 0.5rem; line-height: 1.4; }
+    .header-left { gap: 4px; }
+    .header-right { gap: 4px; }
+    .main-title { font-size: 0.95rem; }
+    .sub-title { font-size: 0.6rem; letter-spacing: 1px; }
+    .header-divider { margin-top: 12px; }
+  }
+
+  /* ─── RESPONSIVE: TINY PHONES (340px) ────────── */
+  @media (max-width: 340px) {
+    .official-en span { font-size: 0.44rem; }
+    .official-ar span { font-size: 0.44rem; }
+    .uae-flag { height: 26px; }
+    .school-logo { height: 30px; width: 30px; }
+    .main-title { font-size: 0.85rem; }
+    .sub-title { font-size: 0.55rem; }
+  }
+
+  /* ═══════════════════════════════════════════════════
+     TABS
+     ═══════════════════════════════════════════════════ */
   .tabs {
     display: flex;
     flex-wrap: wrap;
@@ -171,7 +324,6 @@
   }
 
   input:focus, select:focus { border-color: var(--accent5); }
-
   select option { background: var(--card); }
 
   .row2 {
@@ -252,7 +404,6 @@
 
   .result-box .steps strong { color: var(--text); }
 
-  /* Basic calculator display */
   .calc-display {
     background: var(--bg);
     border: 2px solid var(--border);
@@ -306,7 +457,6 @@
 
   .error { color: var(--accent1) !important; font-size: 1rem !important; }
 
-  /* Shape buttons */
   .shape-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -334,23 +484,88 @@
   .fields { display: none; }
   .fields.show { display: block; animation: fadeIn 0.2s ease; }
 
+  /* ═══════════════════════════════════════════════════
+     FOOTER — BADGE STYLE
+     ═══════════════════════════════════════════════════ */
   footer {
     text-align: center;
-    color: var(--subtext);
-    font-size: 0.8rem;
-    padding: 20px;
+    padding: 10px 20px 30px;
     position: relative;
     z-index: 1;
+  }
+
+  .footer-badge {
+    display: inline-block;
+    padding: 8px 28px;
+    border-radius: 50px;
+    background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(255,107,107,0.15));
+    border: 1px solid rgba(168,85,247,0.35);
+  }
+
+  .footer-badge span {
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.95rem;
+    background: linear-gradient(90deg, var(--accent5), var(--accent1));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.5px;
+  }
+
+  @media (max-width: 480px) {
+    .footer-badge { padding: 6px 16px; }
+    .footer-badge span { font-size: 0.78rem; }
   }
 </style>
 </head>
 <body>
 
+<!-- ═══════════════════════════════════════════════════════
+     HEADER: Flag+English ← Center Title → Arabic+Logo
+     ═══════════════════════════════════════════════════════ -->
 <header>
-  <h1>🧮 Grade 7 Math</h1>
-  <p>Your smart math helper for class!</p>
+
+  <div class="header-main-row">
+
+    <!-- LEFT: UAE Flag + English Official Text -->
+    <div class="header-left">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_United_Arab_Emirates.svg"
+           alt="UAE Flag" class="uae-flag"
+           onerror="this.style.display='none'">
+      <div class="official-en">
+        <span>Government of Sharjah</span>
+        <span>Sharjah Private Education Authority</span>
+        <span>Al Rushed American Private School</span>
+      </div>
+    </div>
+
+    <!-- CENTER: School Name + Subtitle -->
+    <div class="header-center">
+      <h1 class="main-title">Al Rushed American Private School</h1>
+      <h2 class="sub-title">School Calculator</h2>
+    </div>
+
+    <!-- RIGHT: Arabic Official Text + School Logo -->
+    <div class="header-right">
+      <div class="official-ar">
+        <span>حكومــــــــــة الشارقـــــــــة</span>
+        <span>هيئة الشارقة للتعليم الخاص</span>
+        <span>مدرسة الرشد الأمريكية الخاصة</span>
+      </div>
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTKCPA2rY1OpQmIowIC06pxyOJk1_ME0K5kg&s"
+           alt="School Logo" class="school-logo"
+           onerror="this.style.display='none'">
+    </div>
+
+  </div>
+
+  <hr class="header-divider">
+
 </header>
 
+<!-- ══════════════════════════════════════════════════
+     TABS
+     ══════════════════════════════════════════════════ -->
 <div class="tabs">
   <button class="tab-btn active" data-tab="basic">🔢 Calculator</button>
   <button class="tab-btn" data-tab="fraction">🍕 Fractions</button>
@@ -360,6 +575,9 @@
   <button class="tab-btn" data-tab="algebra">🔍 Algebra</button>
 </div>
 
+<!-- ══════════════════════════════════════════════════
+     PANELS
+     ══════════════════════════════════════════════════ -->
 <div class="panels">
 
   <!-- BASIC CALCULATOR -->
@@ -582,7 +800,15 @@
 
 </div>
 
-<footer>Made with ❤️ for Grade 7 students • Keep learning, keep growing! 🚀</footer>
+<!-- ══════════════════════════════════════════════════
+     FOOTER
+     ══════════════════════════════════════════════════ -->
+<footer>
+  <div class="footer-badge">
+    <span>ICT Depratment:</span>
+     <span>Made with ❤️ for Al-Rushed students • Keep learning, keep growing! 🚀</span>
+  </div>
+</footer>
 
 <script>
 // ─── TAB SWITCHING ───────────────────────────────
