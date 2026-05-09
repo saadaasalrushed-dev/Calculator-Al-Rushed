@@ -49,29 +49,26 @@
   }
 
   /* ═══════════════════════════════════════════════════
-     HEADER
+     HEADER — 2-ROW LAYOUT
      ═══════════════════════════════════════════════════ */
   header {
     position: relative;
     z-index: 1;
-    padding: 20px 12px 0;
+    padding: 16px 12px 0;
     width: 100%;
     max-width: 100vw;
     overflow: hidden;
   }
 
-  .header-main-row {
+  .header-top-row {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     gap: 8px;
     max-width: 1200px;
     margin: 0 auto;
-    width: 100%;
-    min-width: 0;
   }
 
-  /* ─── LEFT: Flag + English ────────────────────── */
   .header-left {
     display: flex;
     align-items: flex-start;
@@ -82,7 +79,7 @@
   }
 
   .uae-flag {
-    height: 48px;
+    height: 44px;
     width: auto;
     border-radius: 5px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.3);
@@ -94,56 +91,21 @@
   .official-en {
     display: flex;
     flex-direction: column;
-    gap: 0;
     min-width: 0;
     overflow: hidden;
   }
 
   .official-en span {
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     font-weight: 700;
     color: var(--subtext);
     letter-spacing: 0.2px;
-    line-height: 1.45;
+    line-height: 1.4;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  /* ─── CENTER: Title ──────────────────────────── */
-  .header-center {
-    text-align: center;
-    flex: 1 1 0;
-    min-width: 0;
-    overflow: hidden;
-    padding: 0 4px;
-  }
-
-  .main-title {
-    font-family: 'Fredoka One', cursive;
-    font-size: clamp(0.72rem, 2.8vw, 1.9rem);
-    background: linear-gradient(135deg, var(--accent2), var(--accent1), var(--accent5));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    letter-spacing: 0.3px;
-    animation: float 3s ease-in-out infinite;
-    line-height: 1.2;
-    overflow-wrap: break-word;
-    word-break: break-word;
-  }
-
-  .sub-title {
-    font-family: 'Nunito', sans-serif;
-    font-size: clamp(0.55rem, 1.6vw, 0.9rem);
-    font-weight: 800;
-    color: var(--accent3);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-    margin-top: 1px;
-  }
-
-  /* ─── RIGHT: Arabic + Logo ───────────────────── */
   .header-right {
     display: flex;
     align-items: flex-start;
@@ -156,7 +118,6 @@
   .official-ar {
     display: flex;
     flex-direction: column;
-    gap: 0;
     text-align: right;
     direction: rtl;
     min-width: 0;
@@ -165,18 +126,18 @@
 
   .official-ar span {
     font-family: 'Cairo', sans-serif;
-    font-size: 0.62rem;
+    font-size: 0.58rem;
     font-weight: 700;
     color: rgba(255,255,255,0.42);
-    line-height: 1.5;
+    line-height: 1.45;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
   .school-logo {
-    height: 50px;
-    width: 50px;
+    height: 46px;
+    width: 46px;
     border-radius: 50%;
     object-fit: cover;
     flex-shrink: 0;
@@ -185,11 +146,43 @@
   }
   .school-logo:hover { transform: scale(1.06); }
 
+  .header-title-row {
+    text-align: center;
+    margin-top: 10px;
+    width: 100%;
+  }
+
+  .main-title {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(0.82rem, 3.5vw, 2rem);
+    background: linear-gradient(135deg, var(--accent2), var(--accent1), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 0.3px;
+    animation: float 3s ease-in-out infinite;
+    line-height: 1.25;
+    white-space: nowrap;
+    display: block;
+  }
+
+  .sub-title {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(0.55rem, 1.8vw, 0.95rem);
+    font-weight: 800;
+    color: var(--accent3);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+    white-space: nowrap;
+    display: block;
+  }
+
   .header-divider {
     width: 60px;
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--accent5), transparent);
-    margin: 12px auto 0;
+    margin: 10px auto 0;
     border: none;
   }
 
@@ -198,36 +191,35 @@
     50% { transform: translateY(-4px); }
   }
 
-  /* ─── RESPONSIVE HEADER ──────────────────────── */
   @media (min-width: 769px) {
-    header { padding: 24px 20px 0; }
-    .uae-flag { height: 56px; }
-    .school-logo { height: 58px; width: 58px; }
-    .official-en span { font-size: 0.72rem; }
-    .official-ar span { font-size: 0.72rem; }
+    header { padding: 22px 20px 0; }
+    .uae-flag { height: 54px; }
+    .school-logo { height: 56px; width: 56px; }
+    .official-en span { font-size: 0.7rem; }
+    .official-ar span { font-size: 0.7rem; }
     .header-left, .header-right { gap: 10px; }
-    .header-main-row { gap: 14px; }
+    .header-title-row { margin-top: 14px; }
   }
 
   @media (max-width: 480px) {
-    header { padding: 14px 8px 0; }
-    .uae-flag { height: 36px; }
-    .school-logo { height: 40px; width: 40px; }
-    .official-en span { font-size: 0.5rem; line-height: 1.35; }
-    .official-ar span { font-size: 0.5rem; line-height: 1.4; }
+    header { padding: 12px 8px 0; }
+    .uae-flag { height: 34px; }
+    .school-logo { height: 38px; width: 38px; }
+    .official-en span { font-size: 0.46rem; line-height: 1.3; }
+    .official-ar span { font-size: 0.46rem; line-height: 1.35; }
     .header-left, .header-right { gap: 4px; }
-    .header-main-row { gap: 4px; }
-    .header-divider { margin-top: 10px; }
+    .header-title-row { margin-top: 8px; }
+    .header-divider { margin-top: 8px; }
   }
 
   @media (max-width: 360px) {
     header { padding: 10px 6px 0; }
-    .uae-flag { height: 30px; }
-    .school-logo { height: 34px; width: 34px; }
-    .official-en span { font-size: 0.42rem; }
-    .official-ar span { font-size: 0.42rem; }
+    .uae-flag { height: 28px; }
+    .school-logo { height: 32px; width: 32px; }
+    .official-en span { font-size: 0.38rem; }
+    .official-ar span { font-size: 0.38rem; }
     .header-left, .header-right { gap: 3px; }
-    .header-main-row { gap: 3px; }
+    .header-title-row { margin-top: 6px; }
   }
 
   /* ═══════════════════════════════════════════════════
@@ -238,7 +230,7 @@
     flex-wrap: wrap;
     justify-content: center;
     gap: 8px;
-    padding: 14px 12px 0;
+    padding: 12px 12px 0;
     position: relative;
     z-index: 1;
     max-width: 100vw;
@@ -497,7 +489,7 @@
   .fields.show { display: block; animation: fadeIn 0.2s ease; }
 
   /* ═══════════════════════════════════════════════════
-     FOOTER
+     FOOTER — Emoji-safe gradient text
      ═══════════════════════════════════════════════════ */
   footer {
     text-align: center;
@@ -507,32 +499,45 @@
   }
 
   .footer-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: center;
     padding: 7px 24px;
     border-radius: 50px;
     background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(255,107,107,0.15));
     border: 1px solid rgba(168,85,247,0.35);
-  }
-
-  .footer-badge span {
     font-family: 'Fredoka One', cursive;
     font-size: 0.85rem;
+    letter-spacing: 0.3px;
+    line-height: 1.5;
+  }
+
+  /* Gradient text (no emojis inside these spans) */
+  .footer-badge .gt {
     background: linear-gradient(90deg, var(--accent5), var(--accent1));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    letter-spacing: 0.3px;
+  }
+
+  /* Emojis — full color, no gradient clipping */
+  .footer-badge .em {
+    -webkit-text-fill-color: initial;
+    font-style: normal;
+    font-size: 1em;
+    vertical-align: middle;
   }
 
   @media (max-width: 480px) {
-    .footer-badge { padding: 5px 14px; }
-    .footer-badge span { font-size: 0.7rem; }
+    .footer-badge { padding: 5px 14px; gap: 4px; font-size: 0.7rem; }
     .panels { padding: 10px 10px 16px; }
     .card { padding: 18px; }
   }
 
   @media (max-width: 360px) {
-    .footer-badge span { font-size: 0.6rem; }
+    .footer-badge { font-size: 0.6rem; }
     .panels { padding: 8px 8px 12px; }
     .card { padding: 14px; }
   }
@@ -544,8 +549,8 @@
      HEADER
      ═══════════════════════════════════════════════════════ -->
 <header>
-  <div class="header-main-row">
 
+  <div class="header-top-row">
     <div class="header-left">
       <img src="https://upload.wikimedia.org/wikipedia/commons/c/cb/Flag_of_the_United_Arab_Emirates.svg"
            alt="UAE Flag" class="uae-flag"
@@ -555,11 +560,6 @@
         <span>Sharjah Private Education Authority</span>
         <span>Al Rushed American Private School</span>
       </div>
-    </div>
-
-    <div class="header-center">
-      <h1 class="main-title">Al Rushed American Private School</h1>
-      <h2 class="sub-title">School Calculator</h2>
     </div>
 
     <div class="header-right">
@@ -572,8 +572,13 @@
            alt="School Logo" class="school-logo"
            onerror="this.style.display='none'">
     </div>
-
   </div>
+
+  <div class="header-title-row">
+    <h1 class="main-title">Al Rushed American Private School</h1>
+    <h2 class="sub-title">School Calculator</h2>
+  </div>
+
   <hr class="header-divider">
 </header>
 
@@ -777,10 +782,13 @@
 
 </div>
 
+<!-- ══════════════════════════════════════════════════
+     FOOTER — Emojis use <em> (visible), text uses <span class="gt"> (gradient)
+     ══════════════════════════════════════════════════ -->
 <footer>
   <div class="footer-badge">
-    <span>🥰🙂🤗ICT Depratment:</span>
-    <span>Made with ❤️ for Al-Rushed students • Keep learning, keep growing! 🚀</span>
+    <em class="em">🥰🙂🤗</em><span class="gt">ICT Department:</span>
+    <span class="gt">Made with </span><em class="em">❤️</em><span class="gt"> for Al-Rushed students • Keep learning, keep growing! </span><em class="em">🚀</em>
   </div>
 </footer>
 
